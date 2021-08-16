@@ -1,11 +1,21 @@
 import 'package:cab_rider/brand_colors.dart';
 import 'package:cab_rider/screens/loginpage.dart';
+import 'package:cab_rider/screens/mainpage.dart';
 import 'package:cab_rider/widgets/TaxiButton.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class RegistrationPage extends StatelessWidget {
+class RegistrationPage extends StatefulWidget {
   static const String id = 'register';
+
+  @override
+  _RegistrationPageState createState() => _RegistrationPageState();
+}
+
+class _RegistrationPageState extends State<RegistrationPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void showSnackBar(String title) {
@@ -22,19 +32,42 @@ class RegistrationPage extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   var fullNameController = TextEditingController();
+
   var phoneController = TextEditingController();
+
   var emailController = TextEditingController();
+
   var passwordController = TextEditingController();
 
   void registerUser() async {
-    final User user = (await _auth.createUserWithEmailAndPassword(
+    final User user = (await _auth
+            .createUserWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
-    ))
+    )
+            .catchError((ex) {
+      //check error display message
+      PlatformException thisEx = ex;
+      showSnackBar(thisEx.message);
+    }))
         .user;
 
+    // check if user registration is successful
     if (user != null) {
-      print('registration successful');
+      DatabaseReference newUserRef =
+          FirebaseDatabase.instance.reference().child('users/${user.uid}');
+
+      //Prepare data to be saved on users table
+      Map userMap = {
+        'fullname': fullNameController.text,
+        'email': emailController.text,
+        'phone': phoneController.text,
+      };
+
+      newUserRef.set(userMap);
+
+      //Take the user to the mainPage
+      Navigator.pushNamedAndRemoveUntil(context, MainPage.id, (route) => false);
     }
   }
 
@@ -140,8 +173,16 @@ class RegistrationPage extends StatelessWidget {
                       TaxiButton(
                         title: 'REGISTER',
                         color: BrandColors.colorGreen,
-                        onPressed: () {
-                          // check network awavilability
+                        onPressed: () async {
+                          // check network availability
+                          var connectivityResult =
+                              await Connectivity().checkConnectivity();
+                          if (connectivityResult != ConnectivityResult.mobile &&
+                              connectivityResult != ConnectivityResult.wifi) {
+                            showSnackBar('No internet connectivity');
+                            return;
+                          }
+
                           if (fullNameController.text.length < 3) {
                             showSnackBar('Please provide a valid full name');
                             return;
