@@ -22,7 +22,12 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Brand-Regular',
         primarySwatch: Colors.blue,
       ),
-      home: RegistrationPage(),
+      initialRoute: RegistrationPage.id,
+      routes: {
+        RegistrationPage.id: (content) => RegistrationPage(),
+        LoginPage.id: (content) => LoginPage(),
+        MainPage.id: (content) => MainPage(),
+      },
     );
   }
 }

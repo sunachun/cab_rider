@@ -1,7 +1,11 @@
 import 'package:cab_rider/brand_colors.dart';
+import 'package:cab_rider/screens/loginpage.dart';
+import 'package:cab_rider/widgets/TaxiButton.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatelessWidget {
+  static const String id = 'register';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,31 +100,19 @@ class RegistrationPage extends StatelessWidget {
                         style: TextStyle(fontSize: 14.0),
                       ),
                       SizedBox(height: 40),
-                      RaisedButton(
-                        onPressed: () {},
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(25),
-                        ),
+                      TaxiButton(
+                        title: 'REGISTER',
                         color: BrandColors.colorGreen,
-                        textColor: Colors.white,
-                        child: Container(
-                          height: 50,
-                          child: Center(
-                            child: Text(
-                              'REGISTER',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontFamily: 'Brand-Bold',
-                              ),
-                            ),
-                          ),
-                        ),
+                        onPressed: () {},
                       ),
                     ],
                   ),
                 ),
                 FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, LoginPage.id, (route) => false);
+                  },
                   child: Text('Already have a RIDER account? Log in'),
                 ),
               ],
