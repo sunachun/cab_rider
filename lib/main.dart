@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Brand-Regular',
         primarySwatch: Colors.blue,
       ),
-      initialRoute: RegistrationPage.id,
+      initialRoute: MainPage.id,
       routes: {
         RegistrationPage.id: (content) => RegistrationPage(),
         LoginPage.id: (content) => LoginPage(),
