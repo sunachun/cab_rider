@@ -1,6 +1,7 @@
 import 'package:cab_rider/brand_colors.dart';
 import 'package:cab_rider/screens/mainpage.dart';
 import 'package:cab_rider/screens/registrationpage.dart';
+import 'package:cab_rider/widgets/ProgressDialog.dart';
 import 'package:cab_rider/widgets/TaxiButton.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,6 +37,15 @@ class _LoginPageState extends State<LoginPage> {
   var passwordController = TextEditingController();
 
   void login() async {
+    //show please wait dialog
+    //
+    // showDialog(
+    //   barrierDismissible: false,
+    //   context: context,
+    //   builder: (BuildContext context) =>
+    //       ProgressDialog(status: 'Logging you in'),
+    // );
+
     final User user = (await _auth
             .signInWithEmailAndPassword(
       email: emailController.text,
@@ -43,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     )
             .catchError((ex) {
       //check error display message
+      // Navigator.pop(context);
       PlatformException thisEx = ex;
       showSnackBar(thisEx.message);
     }))
@@ -53,13 +64,12 @@ class _LoginPageState extends State<LoginPage> {
       DatabaseReference userRef =
           FirebaseDatabase.instance.reference().child('users/${user.uid}');
 
-      userRef.once().then((DataSnapshot snapshot) => {
-            if (snapshot.value != null)
-              {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, MainPage.id, (route) => false)
-              }
-          });
+      userRef.once().then((DataSnapshot snapshot) {
+        if (snapshot.value != null) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, MainPage.id, (route) => false);
+        }
+      });
     }
   }
 
