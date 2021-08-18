@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cab_rider/brand_colors.dart';
+import 'package:cab_rider/style/styles.dart';
 import 'package:cab_rider/widgets/BrandDivider.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   double searchSheetHeight = (Platform.isIOS) ? 300 : 275;
 
   Completer<GoogleMapController> _controller = Completer();
@@ -30,6 +32,76 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      drawer: Container(
+        width: 250,
+        color: Colors.white,
+        child: Drawer(
+          child: ListView(
+            padding: EdgeInsets.all(0),
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                height: 160,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset(
+                        'images/user_icon.png',
+                        height: 60,
+                        width: 60,
+                      ),
+                      SizedBox(width: 15),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'suna0',
+                            style: TextStyle(
+                                fontSize: 20, fontFamily: 'Brand-Bold'),
+                          ),
+                          SizedBox(width: 5),
+                          Text('View Profile'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              BrandDivider(),
+              SizedBox(width: 10),
+              //Free rides
+              ListTile(
+                leading: Icon(OMIcons.cardGiftcard),
+                title: Text('Free Rides', style: kDrawerItemStyle),
+              ),
+              //Payments
+              ListTile(
+                leading: Icon(OMIcons.creditCard),
+                title: Text('Payments', style: kDrawerItemStyle),
+              ),
+              //history
+              ListTile(
+                leading: Icon(OMIcons.history),
+                title: Text('Ride history', style: kDrawerItemStyle),
+              ),
+              //support
+              ListTile(
+                leading: Icon(OMIcons.contactSupport),
+                title: Text('Support', style: kDrawerItemStyle),
+              ),
+              //about
+              ListTile(
+                leading: Icon(OMIcons.info),
+                title: Text('About', style: kDrawerItemStyle),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Stack(
         children: <Widget>[
           GoogleMap(
@@ -46,6 +118,40 @@ class _MainPageState extends State<MainPage> {
               });
             },
           ),
+
+          ///MenuButton
+          Positioned(
+            top: 44,
+            left: 20,
+            child: GestureDetector(
+              onTap: () {
+                scaffoldKey.currentState.openDrawer();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 5.0,
+                        spreadRadius: 0.5,
+                        offset: Offset(0.7, 0.7),
+                      ),
+                    ]),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 20,
+                  child: Icon(
+                    Icons.menu,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          ///SearchSheet
           Positioned(
             left: 0,
             right: 0,
