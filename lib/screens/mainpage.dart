@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cab_rider/brand_colors.dart';
+import 'package:cab_rider/helpers/helpermethods.dart';
 import 'package:cab_rider/style/styles.dart';
 import 'package:cab_rider/widgets/BrandDivider.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,9 @@ class _MainPageState extends State<MainPage> {
       zoom: 14,
     );
     mapController.animateCamera(CameraUpdate.newCameraPosition(cp));
+
+    String address = await HelperMethods.findCordinateAddress(position);
+    print(address);
   }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -135,6 +139,8 @@ class _MainPageState extends State<MainPage> {
               setState(() {
                 mapBottomPadding = (Platform.isAndroid) ? 280 : 270;
               });
+
+              setupPositionLocator();
             },
           ),
 
