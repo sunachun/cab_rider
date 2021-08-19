@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cab_rider/brand_colors.dart';
+import 'package:cab_rider/dataprovider/appdata.dart';
 import 'package:cab_rider/helpers/helpermethods.dart';
 import 'package:cab_rider/style/styles.dart';
 import 'package:cab_rider/widgets/BrandDivider.dart';
@@ -9,6 +10,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'dart:io';
+
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   static const String id = 'mainpage';
@@ -40,7 +43,8 @@ class _MainPageState extends State<MainPage> {
     );
     mapController.animateCamera(CameraUpdate.newCameraPosition(cp));
 
-    String address = await HelperMethods.findCordinateAddress(position);
+    String address =
+        await HelperMethods.findCordinateAddress(position, context);
     print(address);
   }
 
