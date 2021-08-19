@@ -1,5 +1,7 @@
 import 'package:cab_rider/brand_colors.dart';
+import 'package:cab_rider/dataprovider/appdata.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -7,8 +9,27 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  var pickupController = TextEditingController();
+  var destinationController = TextEditingController();
+
+  var focusDestination = FocusNode();
+
+  bool focused = false;
+
+  void setFocus() {
+    if (!focused) {
+      FocusScope.of(context).requestFocus(focusDestination);
+      focused = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    setFocus();
+    String address =
+        Provider.of<AppData>(context).pickupAddress.placeName ?? '';
+    pickupController.text = address;
+
     return Scaffold(
       // appBar: AppBar(
       //   title: Text('Set Destination'),
@@ -70,6 +91,7 @@ class _SearchPageState extends State<SearchPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: TextField(
+                              controller: pickupController,
                               decoration: InputDecoration(
                                 hintText: 'Pickup location',
                                 fillColor: BrandColors.colorLightGrayFair,
@@ -103,6 +125,8 @@ class _SearchPageState extends State<SearchPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: TextField(
+                              focusNode: focusDestination,
+                              controller: destinationController,
                               decoration: InputDecoration(
                                 hintText: 'Where to?',
                                 fillColor: BrandColors.colorLightGrayFair,
