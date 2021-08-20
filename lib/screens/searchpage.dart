@@ -1,4 +1,5 @@
 import 'package:cab_rider/brand_colors.dart';
+import 'package:cab_rider/datamodels/prediction.dart';
 import 'package:cab_rider/dataprovider/appdata.dart';
 import 'package:cab_rider/globalvariable.dart';
 import 'package:cab_rider/helpers/requesthelper.dart';
@@ -33,7 +34,14 @@ class _SearchPageState extends State<SearchPage> {
       if (response == 'failed') {
         return;
       }
-      print(response);
+
+      if (response['status'] == 'OK') {
+        var predictionJson = response['predictions'];
+
+        var thisList = (predictionJson as List)
+            .map((e) => Prediction.fromJson(e))
+            .toList();
+      }
     }
   }
 
