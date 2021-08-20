@@ -1,5 +1,7 @@
 import 'package:cab_rider/brand_colors.dart';
 import 'package:cab_rider/dataprovider/appdata.dart';
+import 'package:cab_rider/globalvariable.dart';
+import 'package:cab_rider/helpers/requesthelper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,18 @@ class _SearchPageState extends State<SearchPage> {
     if (!focused) {
       FocusScope.of(context).requestFocus(focusDestination);
       focused = true;
+    }
+  }
+
+  void searchPlace(String placeName) async {
+    if (placeName.length > 1) {
+      String url =
+          'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=123254251&components=country:us';
+      var response = await RequestHelper.getRequest(url);
+      if (response == 'failed') {
+        return;
+      }
+      print(response);
     }
   }
 
@@ -125,6 +139,9 @@ class _SearchPageState extends State<SearchPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: TextField(
+                              onChanged: (value) {
+                                searchPlace(value);
+                              },
                               focusNode: focusDestination,
                               controller: destinationController,
                               decoration: InputDecoration(
