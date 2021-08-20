@@ -3,7 +3,10 @@ import 'package:cab_rider/datamodels/prediction.dart';
 import 'package:cab_rider/dataprovider/appdata.dart';
 import 'package:cab_rider/globalvariable.dart';
 import 'package:cab_rider/helpers/requesthelper.dart';
+import 'package:cab_rider/widgets/BrandDivider.dart';
+import 'package:cab_rider/widgets/PredictionTile.dart';
 import 'package:flutter/material.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
@@ -26,6 +29,8 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  List<Prediction> destinationPredictionList = [];
+
   void searchPlace(String placeName) async {
     if (placeName.length > 1) {
       String url =
@@ -41,6 +46,9 @@ class _SearchPageState extends State<SearchPage> {
         var thisList = (predictionJson as List)
             .map((e) => Prediction.fromJson(e))
             .toList();
+        setState(() {
+          destinationPredictionList = thisList;
+        });
       }
     }
   }
@@ -171,6 +179,25 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
+          (destinationPredictionList.length > 0)
+              ? Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: ListView.separated(
+                    padding: EdgeInsets.all(0),
+                    itemBuilder: (context, index) {
+                      return PredictionTile(
+                        prediction: destinationPredictionList[index],
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        BrandDivider(),
+                    itemCount: destinationPredictionList.length,
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
