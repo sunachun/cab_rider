@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cab_rider/brand_colors.dart';
 import 'package:cab_rider/dataprovider/appdata.dart';
 import 'package:cab_rider/helpers/helpermethods.dart';
@@ -225,11 +224,15 @@ class _MainPageState extends State<MainPage> {
                     ),
                     SizedBox(height: 20),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        var response = await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SearchPage()));
+
+                        if (response == 'getDirection') {
+                          await getDirection();
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -316,5 +319,29 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
     );
+  }
+
+  Future<void> getDirection() async {
+    var pickup = Provider.of<AppData>(context, listen: false).pickupAddress;
+    var destination =
+        Provider.of<AppData>(context, listen: false).destinationAddress;
+
+    var pickupLatLng = LatLng(pickup.latitude, pickup.longitude);
+    var destinationLatLng = LatLng(destination.latitude, destination.longitude);
+
+    // showDialog(
+    //   barrierDismissible: false,
+    //   context: context,
+    //   builder: (BuildContext context) => ProgressDialog(
+    //     status: 'Please wait...',
+    //   ),
+    // );
+
+    var thisDetails = await HelperMethods.getDirectionDetails(
+        pickupLatLng, destinationLatLng);
+
+    Navigator.pop(context);
+
+    print(thisDetails.encodedPoints);
   }
 }
